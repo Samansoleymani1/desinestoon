@@ -1,0 +1,44 @@
+
+:root {
+  /* Brand Colors */
+  --color-primary: #ED087B;
+  --color-primary-hover: #C90666;
+  --color-primary-light: #FFF2F8;
+
+  /* Backgrounds */
+  --color-background: #FFFFFF;
+  --color-surface: #FFF8FB;
+
+  /* Typography */
+  --color-text: #29232B;
+  --color-text-muted: #746A72;
+
+  /* Borders */
+  --color-border: #F0E4EB;
+
+  /* Fonts */
+  --font-primary: "Vazirmatn", Tahoma, sans-serif;
+
+  /* Layout */
+  --container-width: 1200px;
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-soft: 0 8px 30px rgba(41, 35, 43, 0.06);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}

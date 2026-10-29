@@ -104,6 +104,136 @@ body.lightbox-open{overflow:hidden}
 @media(min-width:992px){.footer-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,.8fr) minmax(0,.9fr) minmax(0,1.15fr);gap:2rem}}
 @media(max-width:599px){.site-footer{padding-top:3.25rem}.footer-grid{gap:2rem;padding-bottom:2.25rem}}
 
+/* Rental equipment category cards */
+.rental-categories{display:grid;grid-template-columns:minmax(0,1fr);gap:1.25rem;margin:0 0 2.5rem}
+.rental-category-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid var(--color-border,#f1e3e9);border-radius:var(--radius-lg,22px);background:#fff;box-shadow:var(--shadow-soft,0 12px 30px #21101a0c);transition:transform .25s,box-shadow .25s}
+.rental-category-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px #29232b1a}
+.rental-category-card>img{display:block;width:100%;height:260px;object-fit:cover;object-position:center;background:#fff6fa}
+.rental-category-copy{display:flex;flex:1;flex-direction:column;align-items:flex-start;padding:1.25rem}
+.rental-category-copy h3{margin:0 0 .5rem;font-size:1.1rem;line-height:1.7}
+.rental-category-copy p{margin:0 0 1.1rem;color:var(--color-text-muted,#716571);font-size:.92rem;line-height:1.9}
+.rental-category-link{margin-top:auto;cursor:pointer}
+@media(min-width:600px){.rental-categories{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}}
+@media(min-width:992px){.rental-categories{grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem}.rental-category-card>img{height:300px}}
+
+/* Refined portfolio and rental section — compact, calm hierarchy */
+.portfolio{padding:3.75rem 0 4.25rem}
+.portfolio h2{margin-bottom:.45rem}
+.portfolio>.container>p{margin-bottom:1.5rem;line-height:1.9}
+.portfolio-filters{gap:.55rem;margin:0 0 1.5rem}
+.filter-btn{min-height:38px;padding:.48rem 1rem;font-size:.82rem}
+.portfolio-grid{gap:1.1rem}
+.portfolio-card-content{padding:.9rem 1rem}
+.portfolio-card-content h3{font-size:.95rem}
+.rental-section-heading{margin:3rem 0 1.1rem;padding-top:1.5rem;border-top:1px solid var(--color-border,#f1e3e9)}
+.rental-section-heading .section-eyebrow{margin-bottom:.25rem;font-size:.68rem}
+.rental-section-heading h3{margin:0 0 .25rem;font-size:1.35rem;font-weight:800}
+.rental-section-heading p{margin:0;color:var(--color-text-muted,#716571);font-size:.9rem;line-height:1.8}
+.rental-categories{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:0}
+.rental-category-card{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:stretch;min-height:128px;border-radius:16px;box-shadow:0 5px 18px #21101a08}
+.rental-category-card:hover{transform:translateY(-2px);box-shadow:0 9px 24px #29232b12}
+.rental-category-card>img{width:100%;height:100%;min-height:128px;max-height:155px;object-fit:cover}
+.rental-category-copy{align-items:flex-start;justify-content:center;padding:.8rem}
+.rental-category-copy h3{margin:0 0 .25rem;font-size:.92rem;line-height:1.6}
+.rental-category-copy p{margin:0 0 .65rem;font-size:.78rem;line-height:1.65}
+.rental-category-link{min-height:32px;padding:.4rem .8rem;font-size:.75rem}
+@media(min-width:992px){.portfolio-grid{gap:1.25rem}.rental-categories{grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.rental-category-card>img{height:100%;min-height:128px;max-height:155px}}
+@media(max-width:991px){.rental-categories{grid-template-columns:1fr;gap:.75rem}.rental-category-card{grid-template-columns:104px minmax(0,1fr);min-height:116px}.rental-category-card>img{min-height:116px;max-height:135px}.rental-category-copy{padding:.75rem}.rental-category-copy p{margin-bottom:.5rem}}
+@media(max-width:599px){.portfolio{padding:2.75rem 0 3rem}.portfolio>.container>p{margin-bottom:1.1rem}.portfolio-filters{flex-wrap:nowrap;overflow-x:auto;padding:0 0 .45rem;margin-inline:-.25rem;scrollbar-width:thin;scroll-snap-type:x proximity}.filter-btn{flex:0 0 auto;scroll-snap-align:start}.rental-section-heading{margin-top:2.25rem;padding-top:1.2rem}.portfolio-grid{gap:.85rem}.portfolio-card-content{padding:.7rem .8rem}.portfolio-card-content h3{font-size:.88rem}.rental-category-card{grid-template-columns:88px minmax(0,1fr)}.rental-category-card>img{min-height:110px;max-height:125px}.rental-category-copy h3{font-size:.88rem}.rental-category-copy p{font-size:.75rem}.rental-category-link{min-height:30px}}
+
+
+/* Portfolio starts collapsed; the gallery appears only after a filter is selected. */
+.portfolio-empty-state{
+  grid-column:1/-1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:170px;
+  padding:2rem 1.25rem;
+  border:1px dashed #efcddd;
+  border-radius:18px;
+  background:linear-gradient(135deg,#fff8fb,#fff);
+  text-align:center;
+}
+.portfolio-empty-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  height:42px;
+  margin-bottom:.65rem;
+  border-radius:50%;
+  background:#ffedf5;
+  color:var(--color-primary,#ed0078);
+  font-size:1.25rem;
+}
+.portfolio-empty-state h3{margin:0 0 .35rem;font-size:1rem;font-weight:750}
+.portfolio-empty-state p{margin:0;color:var(--color-text-muted,#716571);font-size:.86rem;line-height:1.8}
+
+
+/* Mobile discoverability for horizontally scrollable portfolio filters */
+.portfolio-filter-wrap{position:relative;min-width:0}
+.portfolio-scroll-hint{display:none}
+@media(max-width:599px){
+  .portfolio-filter-wrap{margin-inline:-.5rem}
+  .portfolio-filter-wrap::before,
+  .portfolio-filter-wrap::after{
+    content:"";
+    position:absolute;
+    z-index:2;
+    top:0;
+    bottom:1.25rem;
+    width:18px;
+    pointer-events:none;
+  }
+  .portfolio-filter-wrap::before{
+    right:0;
+    background:linear-gradient(to left,var(--color-background,#fff),transparent);
+  }
+  .portfolio-filter-wrap::after{
+    left:0;
+    background:linear-gradient(to right,var(--color-background,#fff),transparent);
+  }
+  .portfolio-filters{
+    padding:0 .65rem .55rem;
+    margin:0;
+    gap:.5rem;
+    scrollbar-width:thin;
+    scrollbar-color:#e5a8c3 #fbedf4;
+    -webkit-overflow-scrolling:touch;
+  }
+  .portfolio-filters::-webkit-scrollbar{height:4px}
+  .portfolio-filters::-webkit-scrollbar-track{background:#fbedf4;border-radius:999px}
+  .portfolio-filters::-webkit-scrollbar-thumb{background:#e5a8c3;border-radius:999px}
+  .portfolio-scroll-hint{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.4rem;
+    margin:.15rem 0 1rem;
+    padding:.35rem .5rem;
+    color:var(--color-text-muted,#716571);
+    font-size:.7rem;
+    line-height:1.6;
+    text-align:center;
+  }
+  .portfolio-scroll-hint span{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:22px;
+    height:22px;
+    flex:0 0 22px;
+    border-radius:50%;
+    background:#ffedf5;
+    color:var(--color-primary,#ed0078);
+    font-size:1rem;
+    font-weight:700;
+  }
+}
+
+
 /* Premium tap-to-call panel for rental product cards */
 .rental-product-contact{
   display:flex;

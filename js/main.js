@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("copyright-year")?.replaceChildren(String(new Date().getFullYear()));
   initializePortfolio();
   initializePortfolioFilters();
+  initializeRentalCategoryCards();
   initializeLightbox();
 });
 
@@ -49,8 +50,8 @@ function initializePortfolio() {
     console.error("Portfolio data is missing.");
     return;
   }
-  visibleProjects = [...projects];
-  renderProjects(grid, visibleProjects);
+  // Keep the gallery collapsed on first load. Projects appear only after a filter is chosen.
+  visibleProjects = [];
 }
 
 function renderProjects(container, list) {
@@ -77,6 +78,27 @@ function renderProjects(container, list) {
     button.appendChild(image);
     content.appendChild(title);
     card.append(button, content);
+
+    // Every portfolio item gets a direct, tap-to-call price / reservation panel.
+    {
+      const contactBox = document.createElement("a");
+      contactBox.className = "rental-product-contact";
+      contactBox.href = "tel:+989117901519";
+      contactBox.setAttribute("aria-label", `تماس برای قیمت و رزرو ${project.title} با شماره ۰۹۱۱۷۹۰۱۵۱۹`);
+      contactBox.innerHTML = `
+        <span class="rental-contact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.09 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.05 8.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.69A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </span>
+        <span class="rental-contact-copy">
+          <strong>برای قیمت و رزرو تماس بگیرید</strong>
+          <small dir="ltr">0911 790 1519</small>
+        </span>
+        <span class="rental-contact-arrow" aria-hidden="true">←</span>`;
+      card.appendChild(contactBox);
+    }
+
     fragment.appendChild(card);
   });
   container.replaceChildren(fragment);
@@ -96,6 +118,19 @@ function initializePortfolioFilters() {
       const active = item === button;
       item.classList.toggle("active", active);
       item.setAttribute("aria-pressed", String(active));
+    });
+  });
+}
+
+
+function initializeRentalCategoryCards() {
+  document.querySelectorAll("[data-rental-filter]").forEach(cardButton => {
+    cardButton.addEventListener("click", () => {
+      const targetFilter = cardButton.dataset.rentalFilter;
+      const filterButton = document.querySelector(`.portfolio-filters [data-filter="${targetFilter}"]`);
+      if (!filterButton) return;
+      filterButton.click();
+      document.getElementById("portfolio-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 }

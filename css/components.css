@@ -103,3 +103,67 @@ body.lightbox-open{overflow:hidden}
 @media(min-width:600px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-bottom{flex-direction:row;text-align:start}}
 @media(min-width:992px){.footer-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,.8fr) minmax(0,.9fr) minmax(0,1.15fr);gap:2rem}}
 @media(max-width:599px){.site-footer{padding-top:3.25rem}.footer-grid{gap:2rem;padding-bottom:2.25rem}}
+
+/* Premium tap-to-call panel for rental product cards */
+.rental-product-contact{
+  display:flex;
+  align-items:center;
+  gap:.7rem;
+  margin:.1rem .8rem .8rem;
+  padding:.75rem .8rem;
+  min-width:0;
+  border:1px solid #f3c5da;
+  border-radius:14px;
+  background:linear-gradient(120deg,#fff5fa 0%,#fff 100%);
+  color:var(--color-text,#29212a);
+  text-decoration:none;
+  box-shadow:0 4px 12px #ed00780a;
+  transition:border-color .2s,background .2s,transform .2s,box-shadow .2s;
+}
+.rental-product-contact:hover{
+  border-color:var(--color-primary,#ed0078);
+  background:#fff0f7;
+  box-shadow:0 7px 18px #ed007814;
+  transform:translateY(-1px);
+}
+.rental-contact-icon{
+  display:flex;
+  flex:0 0 38px;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:var(--color-primary,#ed0078);
+  color:#fff;
+}
+.rental-contact-copy{
+  display:flex;
+  flex:1;
+  min-width:0;
+  flex-direction:column;
+  gap:.15rem;
+  line-height:1.55;
+}
+.rental-contact-copy strong{font-size:.78rem;font-weight:800}
+.rental-contact-copy small{color:var(--color-text-muted,#716571);font-size:.78rem;letter-spacing:.035em}
+.rental-contact-arrow{
+  display:flex;
+  flex:0 0 26px;
+  align-items:center;
+  justify-content:center;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#ffe2ef;
+  color:var(--color-primary,#ed0078);
+  font-size:1.1rem;
+  transition:transform .2s;
+}
+.rental-product-contact:hover .rental-contact-arrow{transform:translateX(-3px)}
+@media(max-width:599px){
+  .rental-product-contact{margin:.1rem .6rem .65rem;padding:.65rem;gap:.55rem;border-radius:12px}
+  .rental-contact-icon{flex-basis:34px;width:34px;height:34px;border-radius:10px}
+  .rental-contact-copy strong{font-size:.72rem}
+  .rental-contact-copy small{font-size:.73rem}
+}

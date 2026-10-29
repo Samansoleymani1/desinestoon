@@ -55,14 +55,57 @@
       <div class="container">
         <h2 id="portfolio-title">نمونه‌کارهای ما</h2>
         <p>گوشه‌ای از جشن‌هایی که با عشق طراحی کردیم.</p>
-        <div class="portfolio-filters" role="group" aria-label="فیلتر نمونه‌کارها">
-          <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">همه نمونه‌کارها</button>
-          <button type="button" class="filter-btn" data-filter="birthday" aria-pressed="false">جشن تولد</button>
-          <button type="button" class="filter-btn" data-filter="kids" aria-pressed="false">تولد کودک</button>
-          <button type="button" class="filter-btn" data-filter="ceremony" aria-pressed="false">مراسم و گل‌آرایی</button>
-          <button type="button" class="filter-btn" data-filter="special" aria-pressed="false">دیزاین‌های خاص</button>
+        <div class="portfolio-filter-wrap">
+          <div class="portfolio-filters" role="group" aria-label="فیلتر نمونه‌کارها">
+            <button type="button" class="filter-btn" data-filter="all" aria-pressed="false">همه نمونه‌کارها</button>
+            <button type="button" class="filter-btn" data-filter="birthday" aria-pressed="false">جشن تولد</button>
+            <button type="button" class="filter-btn" data-filter="kids" aria-pressed="false">تولد کودک</button>
+            <button type="button" class="filter-btn" data-filter="ceremony" aria-pressed="false">مراسم و گل‌آرایی</button>
+            <button type="button" class="filter-btn" data-filter="special" aria-pressed="false">دیزاین‌های خاص</button>
+            <button type="button" class="filter-btn" data-filter="backgrounds" aria-pressed="false">بک‌گراندها</button>
+            <button type="button" class="filter-btn" data-filter="tables" aria-pressed="false">میز و استند</button>
+            <button type="button" class="filter-btn" data-filter="props" aria-pressed="false">سایر لوازم اجاره‌ای</button>
+          </div>
+          <p class="portfolio-scroll-hint"><span aria-hidden="true">↔</span> برای دیدن دسته‌های بیشتر، فهرست را به چپ و راست بکشید</p>
         </div>
-        <div class="portfolio-grid" id="portfolio-grid" aria-live="polite"></div>
+        <div class="portfolio-grid" id="portfolio-grid" aria-live="polite">
+          <div class="portfolio-empty-state">
+            <span class="portfolio-empty-icon" aria-hidden="true">✦</span>
+            <h3>نمونه‌کار موردنظرت رو انتخاب کن</h3>
+            <p>برای دیدن گالری، یکی از دسته‌بندی‌های بالا رو انتخاب کن.</p>
+          </div>
+        </div>
+        <div class="rental-section-heading">
+          <span class="section-eyebrow">RENTAL COLLECTION</span>
+          <h3>تجهیزات قابل اجاره</h3>
+          <p>برای تکمیل دکور جشن، تجهیزات موردنیازت را انتخاب کن.</p>
+        </div>
+        <div class="rental-categories" aria-label="دسته‌بندی تجهیزات اجاره‌ای">
+          <article class="rental-category-card">
+            <img src="./assets/images/background-01.webp" alt="نمونه بک‌گراند مشکی قابل اجاره" loading="lazy" decoding="async" width="1200" height="1600">
+            <div class="rental-category-copy">
+              <h3>اجاره بک‌گراند</h3>
+              <p>انتخاب بک‌گراندهای متنوع برای دکور و عکاسی جشن</p>
+              <button class="btn btn-outline rental-category-link" type="button" data-rental-filter="backgrounds">مشاهده بک‌گراندها</button>
+            </div>
+          </article>
+          <article class="rental-category-card">
+            <img src="./assets/images/table-03.webp" alt="نمونه میز و استند قابل اجاره" loading="lazy" decoding="async" width="1200" height="1600">
+            <div class="rental-category-copy">
+              <h3>اجاره میز و استند</h3>
+              <p>میزهای دکوراتیو و استندهای مناسب چیدمان جشن</p>
+              <button class="btn btn-outline rental-category-link" type="button" data-rental-filter="tables">مشاهده میزها و استندها</button>
+            </div>
+          </article>
+          <article class="rental-category-card">
+            <img src="./assets/images/prop-02.webp" alt="تابلو نئونی و اکسسوری جشن قابل اجاره" loading="lazy" decoding="async" width="960" height="1280">
+            <div class="rental-category-copy">
+              <h3>سایر لوازم اجاره‌ای</h3>
+              <p>تابلوهای نئونی و اکسسوری‌های خاص برای تکمیل دکور</p>
+              <button class="btn btn-outline rental-category-link" type="button" data-rental-filter="props">مشاهده سایر لوازم</button>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 

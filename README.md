@@ -1,10 +1,22 @@
-# Designestoon
+# دیزاینستون
 
-Static RTL portfolio website. Open `index.html` via Live Server or deploy repository root to GitHub Pages (main branch, /root). No build step.
+سایت فارسی و راست‌چین معرفی خدمات، نمونه‌کارها و تجهیزات جشن، همراه با پنل مدیریت PHP و MySQL.
 
-Before publishing, verify phone numbers, Instagram link, image rights, and all mobile interactions.
+- **GitHub Pages:** حالت پیش‌فرض استاتیک؛ اطلاعات از `js/projects.js` خوانده می‌شود و PHP یا دیتابیس لازم نیست.
+- **اجرای محلی با پنل:** سایت و پنل از یک سرور PHP اجرا می‌شوند؛ نمونه‌کارها، دسته‌ها و تماس از API دریافت می‌شوند.
 
+[راهنمای یکپارچه ویندوز: نصب، دیتابیس، ارتقا، Seed، ساخت مدیر و اجرای سایت و پنل](backend/SETUP-WINDOWS.md)
 
-## Rental equipment categories
+[راهنمای کوتاه استقرار آینده روی هاست](backend/DEPLOYMENT.md)
 
-The portfolio includes three additional rental categories: backgrounds, tables and stands, and other accessories. Category cards jump to the matching gallery filter. Images are stored as optimized WebP files in `assets/images/`.
+برای اجرای نسخه متصل به دیتابیس، پس از آماده‌سازی مطابق راهنما، از ریشه مخزن:
+
+```powershell
+php -d upload_max_filesize=10M -d post_max_size=12M -d memory_limit=256M -d display_errors=0 -S 127.0.0.1:8080 -t backend/public backend/router.php
+```
+
+سایت در ریشه سرویس و پنل در `/admin/login.php` هستند. کل مخزن را document root نکنید. برای Pages، پوشه backend باید از خروجی انتشار حذف بماند؛ ساخت استاندارد Jekyll این کار را با `_config.yml` انجام می‌دهد. در انتشار سفارشی، فقط index.html، css، js و assets را منتشر کنید.
+
+تصاویر اولیه در `assets/images` حفظ شده‌اند. فایل جدید از پنل با نام تصادفی در storage خصوصی نگهداری و فقط از مسیر کنترل‌شده ارائه می‌شود. بایگانی هیچ تصویر یا رکوردی را حذف نمی‌کند.
+
+قبل از انتشار واقعی، شماره‌های تماس، لینک اینستاگرام، مجوز استفاده تصاویر و تعاملات موبایل را بررسی کنید.

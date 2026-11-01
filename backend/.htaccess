@@ -1,0 +1,2 @@
+# لایه دفاعی اضافی؛ document root باید public باشد، نه ریشه مخزن.
+Require all denied

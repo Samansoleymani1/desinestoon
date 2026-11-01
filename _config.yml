@@ -1,0 +1,3 @@
+# فایل‌های سمت سرور هرگز در خروجی GitHub Pages قرار نگیرند.
+exclude:
+  - backend

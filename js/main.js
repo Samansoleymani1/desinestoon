@@ -3,14 +3,21 @@
 let visibleProjects = [];
 let currentProjectIndex = 0;
 let previousFocusedElement = null;
+let portfolioProjects = [];
+let portfolioReady = false;
+let portfolioContact = null;
+let initialPortfolioMessage = null;
+const originalCategories = [];
+const contactLinks = [];
+let instagramLink = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   initializeNavigation();
   document.getElementById("copyright-year")?.replaceChildren(String(new Date().getFullYear()));
-  initializePortfolio();
   initializePortfolioFilters();
   initializeRentalCategoryCards();
   initializeLightbox();
+  initializePortfolio();
 });
 
 function initializeNavigation() {
@@ -43,15 +50,150 @@ function initializeNavigation() {
   });
 }
 
-function initializePortfolio() {
+async function initializePortfolio() {
   const grid = document.getElementById("portfolio-grid");
   if (!grid) return;
-  if (typeof projects === "undefined" || !Array.isArray(projects)) {
-    console.error("Portfolio data is missing.");
-    return;
+  if (!initialPortfolioMessage) {
+    initialPortfolioMessage = grid.firstElementChild.cloneNode(true);
+    document.querySelectorAll('.filter-btn[data-filter]').forEach(button => {
+      if (button.dataset.filter !== 'all') originalCategories.push({slug: button.dataset.filter, title: button.textContent});
+    });
+    contactLinks.push(...document.querySelectorAll('.footer-contact-link'));
+    instagramLink = document.querySelector('.footer-instagram');
   }
-  // Keep the gallery collapsed on first load. Projects appear only after a filter is chosen.
+  portfolioReady = false;
+  portfolioProjects = [];
   visibleProjects = [];
+  portfolioContact = null;
+  closeLightbox();
+  setPortfolioControls(false);
+  const apiMode = window.DesignestoonConfig?.mode === 'api';
+  grid.setAttribute('aria-busy', 'true');
+  if (apiMode) {
+    replacePortfolioFilters([]);
+    setPortfolioControls(false);
+    showPortfolioMessage('در حال دریافت نمونه‌کارها…', 'لطفاً کمی صبر کنید.');
+    setFooterContact(null, 'در حال دریافت اطلاعات تماس…');
+  }
+  try {
+    const data = await window.DesignestoonData.load(typeof projects === 'undefined' ? [] : projects, originalCategories);
+    portfolioProjects = data.projects;
+    portfolioContact = data.contact;
+    if (data.mode === 'api') replacePortfolioFilters(data.categories);
+    portfolioReady = true;
+    grid.replaceChildren(initialPortfolioMessage.cloneNode(true));
+    setPortfolioControls(true);
+    if (data.mode === 'api') setFooterContact(data.contact);
+  } catch (error) {
+    // در حالت API هیچ‌گاه داده قدیمی یا ذخیره‌شده دوباره نمایش داده نمی‌شود.
+    showPortfolioMessage('دریافت گالری انجام نشد.', 'ارتباط با سرویس برقرار نشد یا اطلاعات معتبر نیست. دوباره تلاش کنید.', true);
+    if (apiMode) setFooterContact(null, 'اطلاعات تماس در دسترس نیست');
+  } finally {
+    grid.setAttribute('aria-busy', 'false');
+  }
+}
+function showPortfolioMessage(title, description, retry = false) {
+  const message = initialPortfolioMessage.cloneNode(true);
+  message.querySelector('h3').textContent = title;
+  message.querySelector('p').textContent = description;
+  if (retry) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-outline';
+    button.textContent = 'تلاش دوباره';
+    button.addEventListener('click', initializePortfolio);
+    message.appendChild(button);
+  }
+  document.getElementById('portfolio-grid').replaceChildren(message);
+}
+function replacePortfolioFilters(categories) {
+  const container = document.querySelector('.portfolio-filters');
+  const fragment = document.createDocumentFragment();
+  [{slug: 'all', title: 'همه نمونه‌کارها'}, ...categories].forEach(category => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'filter-btn';
+    button.dataset.filter = category.slug;
+    button.setAttribute('aria-pressed', 'false');
+    button.textContent = category.title;
+    fragment.appendChild(button);
+  });
+  container.replaceChildren(fragment);
+}
+function setPortfolioControls(ready) {
+  const filters = [...document.querySelectorAll('.filter-btn')];
+  filters.forEach(button => { button.disabled = !ready; });
+  document.querySelectorAll('[data-rental-filter]').forEach(button => {
+    const available = ready && filters.some(filter => filter.dataset.filter === button.dataset.rentalFilter);
+    button.disabled = !available;
+    if (ready && !available) button.title = 'این دسته فعلاً در دسترس نیست.';
+    else button.removeAttribute('title');
+  });
+}
+function displayPhone(phone) {
+  return `${phone.slice(0, 4)} ${phone.slice(4, 7)} ${phone.slice(7)}`;
+}
+function phoneHref(phone) {
+  const validated = window.DesignestoonData.phone(phone);
+  return 'tel:+98' + validated.slice(1);
+}
+function persianPhone(phone) {
+  return phone.replace(/[0-9]/g, digit => '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]);
+}
+function setFooterContact(contact, unavailable = '') {
+  contactLinks.forEach((link, index) => {
+    const phone = contact ? (index === 0 ? contact.primary : contact.secondary) : '';
+    link.textContent = phone ? displayPhone(phone) : (index === 0 ? unavailable : '');
+    if (phone) {
+      link.href = phoneHref(phone);
+      link.setAttribute('aria-label', 'تماس با شماره ' + persianPhone(phone));
+      link.removeAttribute('aria-disabled');
+    } else {
+      link.removeAttribute('href');
+      link.setAttribute('aria-disabled', 'true');
+      link.removeAttribute('aria-label');
+    }
+    link.style.display = !phone && index !== 0 ? 'none' : '';
+  });
+  if (instagramLink) {
+    if (contact?.instagram) {
+      instagramLink.href = contact.instagram;
+      instagramLink.removeAttribute('aria-disabled');
+    } else {
+      instagramLink.removeAttribute('href');
+      instagramLink.setAttribute('aria-disabled', 'true');
+    }
+  }
+}
+function createReservationBox(project) {
+  const phone = portfolioContact.primary;
+  const box = document.createElement('a');
+  box.className = 'rental-product-contact';
+  box.href = phoneHref(phone);
+  box.setAttribute('aria-label', `تماس برای قیمت و رزرو ${project.title} با شماره ${persianPhone(phone)}`);
+  const icon = document.createElement('span');
+  icon.className = 'rental-contact-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  for (const [name, value] of Object.entries({viewBox: '0 0 24 24', width: '20', height: '20', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.8', 'stroke-linecap': 'round', 'stroke-linejoin': 'round'})) svg.setAttribute(name, value);
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.09 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.05 8.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.69A2 2 0 0 1 22 16.92z');
+  svg.appendChild(path);
+  icon.appendChild(svg);
+  const copy = document.createElement('span');
+  copy.className = 'rental-contact-copy';
+  const text = document.createElement('strong');
+  text.textContent = 'برای قیمت و رزرو تماس بگیرید';
+  const number = document.createElement('small');
+  number.dir = 'ltr';
+  number.textContent = displayPhone(phone);
+  copy.append(text, number);
+  const arrow = document.createElement('span');
+  arrow.className = 'rental-contact-arrow';
+  arrow.setAttribute('aria-hidden', 'true');
+  arrow.textContent = '←';
+  box.append(icon, copy, arrow);
+  return box;
 }
 
 function renderProjects(container, list) {
@@ -79,25 +221,7 @@ function renderProjects(container, list) {
     content.appendChild(title);
     card.append(button, content);
 
-    // Every portfolio item gets a direct, tap-to-call price / reservation panel.
-    {
-      const contactBox = document.createElement("a");
-      contactBox.className = "rental-product-contact";
-      contactBox.href = "tel:+989117901519";
-      contactBox.setAttribute("aria-label", `تماس برای قیمت و رزرو ${project.title} با شماره ۰۹۱۱۷۹۰۱۵۱۹`);
-      contactBox.innerHTML = `
-        <span class="rental-contact-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.09 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.69 2.8a2 2 0 0 1-.45 2.11L8.05 8.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.69A2 2 0 0 1 22 16.92z"/>
-          </svg>
-        </span>
-        <span class="rental-contact-copy">
-          <strong>برای قیمت و رزرو تماس بگیرید</strong>
-          <small dir="ltr">0911 790 1519</small>
-        </span>
-        <span class="rental-contact-arrow" aria-hidden="true">←</span>`;
-      card.appendChild(contactBox);
-    }
+    card.appendChild(createReservationBox(project));
 
     fragment.appendChild(card);
   });
@@ -107,13 +231,15 @@ function renderProjects(container, list) {
 function initializePortfolioFilters() {
   const filters = document.querySelector(".portfolio-filters");
   const grid = document.getElementById("portfolio-grid");
-  if (!filters || !grid || typeof projects === "undefined" || !Array.isArray(projects)) return;
+  if (!filters || !grid) return;
   filters.addEventListener("click", event => {
+    if (!portfolioReady) return;
     const button = event.target.closest(".filter-btn");
     if (!button || !filters.contains(button)) return;
     const filter = button.dataset.filter;
-    visibleProjects = filter === "all" ? [...projects] : projects.filter(project => project.category === filter);
+    visibleProjects = filter === "all" ? [...portfolioProjects] : portfolioProjects.filter(project => project.category === filter);
     renderProjects(grid, visibleProjects);
+    if (!visibleProjects.length) showPortfolioMessage('نمونه‌کاری برای نمایش وجود ندارد.', 'در این دسته هنوز نمونه‌کاری منتشر نشده است.');
     filters.querySelectorAll(".filter-btn").forEach(item => {
       const active = item === button;
       item.classList.toggle("active", active);
@@ -128,7 +254,7 @@ function initializeRentalCategoryCards() {
     cardButton.addEventListener("click", () => {
       const targetFilter = cardButton.dataset.rentalFilter;
       const filterButton = document.querySelector(`.portfolio-filters [data-filter="${targetFilter}"]`);
-      if (!filterButton) return;
+      if (!portfolioReady || !filterButton || filterButton.disabled) return;
       filterButton.click();
       document.getElementById("portfolio-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });

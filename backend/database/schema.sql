@@ -1,0 +1,64 @@
+CREATE DATABASE IF NOT EXISTS designestoon_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE designestoon_db;
+
+CREATE TABLE IF NOT EXISTS categories (
+ id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+ slug VARCHAR(64) NOT NULL UNIQUE,
+ title VARCHAR(255) NOT NULL,
+ sort_order INT UNSIGNED NOT NULL,
+ is_published BOOLEAN NOT NULL DEFAULT TRUE,
+ INDEX categories_public_order (is_published, sort_order, id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS media (
+ id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+ path VARCHAR(255) NOT NULL UNIQUE,
+ mime_type VARCHAR(64) NOT NULL,
+ byte_size BIGINT UNSIGNED NULL DEFAULT NULL,
+ width INT UNSIGNED NOT NULL,
+ height INT UNSIGNED NOT NULL,
+ alt_text VARCHAR(255) NOT NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS projects (
+ id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+ title VARCHAR(255) NOT NULL,
+ category_id INT UNSIGNED NOT NULL,
+ media_id INT UNSIGNED NOT NULL,
+ sort_order INT UNSIGNED NOT NULL,
+ is_published BOOLEAN NOT NULL DEFAULT TRUE,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ archived_at DATETIME NULL DEFAULT NULL,
+ INDEX projects_visible_order (archived_at, is_published, sort_order, id),
+ CONSTRAINT projects_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT,
+ CONSTRAINT projects_media FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE RESTRICT,
+ INDEX projects_public_order (is_published, sort_order, id),
+ INDEX projects_category_order (category_id, is_published, sort_order, id),
+ INDEX projects_media (media_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS admins (
+ id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+ singleton TINYINT GENERATED ALWAYS AS (1) STORED UNIQUE,
+ username VARCHAR(100) NOT NULL UNIQUE,
+ password_hash VARCHAR(255) NOT NULL,
+ is_active BOOLEAN NOT NULL DEFAULT TRUE,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS settings (
+ setting_key VARCHAR(100) PRIMARY KEY,
+ setting_value TEXT NOT NULL,
+ updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- شمارنده مشترک ورود؛ با تعویض IP یا کوکی دور زده نمی‌شود.
+CREATE TABLE IF NOT EXISTS admin_login_limits (
+ id TINYINT UNSIGNED PRIMARY KEY,
+ failures INT UNSIGNED NOT NULL DEFAULT 0,
+ window_started BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ CONSTRAINT admin_login_limit_singleton CHECK (id = 1)
+) ENGINE=InnoDB;
+INSERT INTO admin_login_limits (id) SELECT 1 WHERE NOT EXISTS (SELECT 1 FROM admin_login_limits WHERE id = 1);

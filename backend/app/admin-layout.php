@@ -15,7 +15,7 @@ function pageStart(string $title, ?array $admin = null): void
 }
 function pageEnd(): void
 {
-    echo '</main><footer>مدیریت دیزاینستون — تغییرات در دیتابیس ذخیره می‌شوند؛ سایت استاتیک هنوز مستقل است.</footer></body></html>';
+    echo '</main><footer>مدیریت دیزاینستون — تغییرات در سایت PHP پس از تازه‌سازی دیده می‌شوند؛ نسخه Pages استاتیک است.</footer></body></html>';
 }
 function formErrors(string $message): void
 {

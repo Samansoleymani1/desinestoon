@@ -1,5 +1,5 @@
-# Designestoon
+# اجرای محلی دیزاینستون
 
-Static RTL portfolio website. Open `index.html` via Live Server or deploy repository root to GitHub Pages (main branch, /root). No build step.
+[راهنمای کامل و یکپارچه ویندوز](backend/SETUP-WINDOWS.md) شامل نصب، ساخت دیتابیس، migrationهای لازم، Seed، ساخت مدیر و اجرای هم‌زمان سایت و پنل است.
 
-Before publishing, verify phone numbers, Instagram link, image rights, and all mobile interactions.
+برای مشاهده عکس افزوده‌شده در پنل، سایت را از سرور PHP و حالت API باز کنید. نسخه استاتیک index.html و GitHub Pages عمداً از js/projects.js استفاده می‌کنند و تغییرات دیتابیس را نشان نمی‌دهند.

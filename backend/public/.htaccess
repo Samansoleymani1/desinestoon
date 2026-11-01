@@ -4,3 +4,8 @@ Require all granted
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
+
+# همان دارایی‌های عمومی مخزن، بدون کپی و بدون دسترسی به Backend خصوصی
+DirectoryIndex index.php
+RewriteEngine On
+RewriteRule ^((?:css|js|assets)/.*)$ site-assets.php?path=$1 [END,B]

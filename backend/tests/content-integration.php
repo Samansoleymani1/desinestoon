@@ -88,7 +88,7 @@ function newProjectId(): int
 }
 try {
     $server = proc_open([PHP_BINARY, '-d', 'upload_max_filesize=10M', '-d', 'post_max_size=12M',
-        '-d', 'memory_limit=256M', '-S', '127.0.0.1:18083', '-t', dirname(__DIR__) . '/public'],
+        '-d', 'memory_limit=256M', '-S', '127.0.0.1:18083', '-t', dirname(__DIR__) . '/public', dirname(__DIR__) . '/router.php'],
         [0 => ['pipe', 'r'], 1 => ['file', sys_get_temp_dir() . '/designestoon-content-test.log', 'a'],
          2 => ['file', sys_get_temp_dir() . '/designestoon-content-test.log', 'a']], $pipes);
     ensure(is_resource($server), 'سرور تست شروع نشد.');

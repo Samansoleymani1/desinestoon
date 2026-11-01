@@ -49,7 +49,7 @@ try {
         $q->execute(['otheradmin', $row['password_hash']]);
         throw new RuntimeException('قید تک‌مدیر اجرا نشد.');
     } catch (PDOException $e) { verify($e->getCode() === '23000', 'خطای دیتابیس غیرمنتظره.'); }
-    $server = proc_open([PHP_BINARY, '-S', '127.0.0.1:18082', '-t', dirname(__DIR__) . '/public'],
+    $server = proc_open([PHP_BINARY, '-S', '127.0.0.1:18082', '-t', dirname(__DIR__) . '/public', dirname(__DIR__) . '/router.php'],
         [0 => ['pipe', 'r'], 1 => ['file', sys_get_temp_dir() . '/designestoon-auth-test.log', 'a'],
          2 => ['file', sys_get_temp_dir() . '/designestoon-auth-test.log', 'a']], $pipes);
     verify(is_resource($server), 'سرور شروع نشد.');

@@ -1,6 +1,6 @@
-# زیرساخت دیزاینستون — فازهای اول تا سوم
+# زیرساخت دیزاینستون — فازهای اول تا چهارم
 
-این بخش مستقل از سایت استاتیک است. پنل فارسی امن، مدیریت نمونه‌کار و دسته، آپلود و تنظیمات تماس پیاده‌سازی شده‌اند؛ سایت اصلی هنوز به API متصل نیست. راهنمای حساب مدیر در [ADMIN.md](ADMIN.md) و راهنمای فاز سوم، migration، آپلود و ویندوز در [CONTENT.md](CONTENT.md) است.
+این بخش مستقل از سایت استاتیک است. پنل فارسی امن، مدیریت نمونه‌کار و دسته، آپلود و تنظیمات تماس پیاده‌سازی شده‌اند؛ نسخه PHP سایت به API متصل است و نسخه Pages استاتیک باقی می‌ماند. راهنمای یکپارچه اجرا در [SETUP-WINDOWS.md](SETUP-WINDOWS.md) است. راهنمای حساب مدیر در [ADMIN.md](ADMIN.md) و راهنمای فاز سوم، migration، آپلود و ویندوز در [CONTENT.md](CONTENT.md) است.
 
 ## ساختار و انتشار امن
 
@@ -53,7 +53,7 @@ Copy-Item backend/.env.example backend/.env
 notepad backend/.env
 php backend/scripts/seed.php
 php backend/scripts/seed.php
-php -d upload_max_filesize=10M -d post_max_size=12M -d memory_limit=256M -d display_errors=0 -S 127.0.0.1:8080 -t backend/public
+php -d upload_max_filesize=10M -d post_max_size=12M -d memory_limit=256M -d display_errors=0 -S 127.0.0.1:8080 -t backend/public backend/router.php
 ```
 
 در `.env` مقدار DB_PASSWORD را وارد کنید. قالب فایل فقط `KEY=value` است، کوتیشن و توضیح انتهای خط پردازش نمی‌شود. متغیر محیطی فرایند بر فایل اولویت دارد. فایل واقعی در Git نادیده گرفته می‌شود. نمونه داده محلی:
@@ -74,7 +74,7 @@ Invoke-RestMethod http://127.0.0.1:8080/api/projects.php
 node backend/tests/source.test.js
 ```
 
-برای خود سایت همچنان Live Server را از ریشه مخزن اجرا کنید؛ سایت در این فاز به API متصل نیست.
+برای سایت متصل به دیتابیس ریشه همان سرویس PHP را باز کنید؛ برای حالت استاتیک فقط فایل‌های عمومی را طبق راهنمای یکپارچه سرو کنید.
 
 ## قرارداد API
 

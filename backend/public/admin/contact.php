@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 pageStart('اطلاعات تماس', $admin);
 formErrors($error);
 ?>
-<p>این تنظیمات در دیتابیس و API عمومی ذخیره می‌شوند؛ اتصال سایت اصلی در فاز چهارم انجام می‌شود.</p>
+<p>این تنظیمات در دیتابیس و API عمومی ذخیره می‌شوند؛ سایت PHP پس از تازه‌سازی از همین شماره استفاده می‌کند؛ نسخه Pages مستقل است.</p>
 <form method="post"><fieldset><legend>راه‌های ارتباطی</legend><?php csrfField(); ?>
 <label for="phone1">شماره تماس اصلی و باکس رزرو</label><input id="phone1" name="contact_phone_primary" dir="ltr" maxlength="40" required value="<?= escape($values['contact_phone_primary']) ?>">
 <label for="phone2">شماره تماس دوم — اختیاری</label><input id="phone2" name="contact_phone_secondary" dir="ltr" maxlength="40" value="<?= escape($values['contact_phone_secondary']) ?>">

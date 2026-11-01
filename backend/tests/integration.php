@@ -39,7 +39,7 @@ try {
     throw new RuntimeException('Foreign key not enforced');
 } catch (PDOException $e) { check($e->getCode() === '23000', 'Unexpected DB error'); }
 
-$server = proc_open([PHP_BINARY, '-S', '127.0.0.1:18081', '-t', dirname(__DIR__) . '/public'],
+$server = proc_open([PHP_BINARY, '-S', '127.0.0.1:18081', '-t', dirname(__DIR__) . '/public', dirname(__DIR__) . '/router.php'],
     [0 => ['pipe', 'r'], 1 => ['file', sys_get_temp_dir() . '/designestoon-test-server.log', 'a'],
      2 => ['file', sys_get_temp_dir() . '/designestoon-test-server.log', 'a']], $pipes);
 check(is_resource($server), 'Server did not start');

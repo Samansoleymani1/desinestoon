@@ -11,3 +11,7 @@ Thumbs.db
 /backend/public/uploads/
 *.sql.gz
 *.dump
+
+# خروجی‌های محلی تست‌های مرورگر Python
+__pycache__/
+*.py[cod]

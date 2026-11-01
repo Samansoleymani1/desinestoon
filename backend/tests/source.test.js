@@ -20,6 +20,8 @@ for (const p of projects) {
   assert(fs.existsSync(path.join(root, p.image)));
   assert(p.width > 0 && p.height > 0);
 }
+assert.match(read('js/site-config.js'), /mode:\s*'static'/);
+assert.match(read('index.html'), /js\/data-source\.js/);
 assert.match(read('_config.yml'), /exclude:\s*\n\s*- backend/);
 assert(!fs.existsSync(path.join(root, '.nojekyll')), 'برای انتشار از شاخه، پردازش Jekyll باید فعال باشد');
 console.log('تطابق ۲۲ نمونه‌کار، ۷ دسته، مسیر تصاویر و تنظیم حذف Backend از Pages تأیید شد.');

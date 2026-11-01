@@ -14,6 +14,6 @@ pageStart('داشبورد', $admin);
 <section><h2>بایگانی‌شده</h2><strong><?= (int)$counts['archived'] ?></strong></section>
 <section><h2>دسته‌بندی‌ها</h2><strong><?= (int)$categories ?></strong></section>
 </div><p>تعداد منتشرشده، وضعیت خود نمونه‌کار را نشان می‌دهد؛ API عمومی تنها نمونه‌کارهای دسته‌های منتشرشده را نمایش می‌دهد.</p>
-<p class="notice">سایت عمومی در این فاز همچنان از اطلاعات ثابت فعلی استفاده می‌کند.</p>
+<p class="notice">سایت PHP اطلاعات این دیتابیس را نمایش می‌دهد؛ پس از تغییرات سایت را تازه کنید. نسخه GitHub Pages مستقل و استاتیک است.</p>
 <a class="button" href="/admin/projects.php">مشاهده فهرست نمونه‌کارها</a>
 <?php pageEnd(); ?>

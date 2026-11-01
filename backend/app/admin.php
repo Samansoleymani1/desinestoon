@@ -18,7 +18,7 @@ header('Cache-Control: no-store, private');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: no-referrer');
-header("Content-Security-Policy: default-src 'none'; style-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
+header("Content-Security-Policy: default-src 'none'; style-src 'self'; img-src 'self' blob:; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
 
 $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
 $local = in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true);
@@ -134,7 +134,34 @@ function requireGet(): void
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         http_response_code(405);
         header('Allow: GET');
-        echo 'این عملیات در فاز دوم فعال نیست.';
+        echo 'این روش درخواست مجاز نیست.';
         exit;
     }
+}
+
+// همه فرم‌های نوشتن از همان نشست و CSRF فاز دوم استفاده می‌کنند.
+function requireWriteRequest(): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        header('Allow: POST');
+        exit('این عملیات فقط با ارسال فرم انجام می‌شود.');
+    }
+    if ((int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 12 * 1024 * 1024) {
+        http_response_code(413);
+        exit('حجم درخواست بیش از حد مجاز است. تصویر باید حداکثر ۱۰ مگابایت باشد.');
+    }
+    if (!validCsrf()) {
+        http_response_code(403);
+        exit('درخواست معتبر نیست. صفحه را تازه کنید و دوباره تلاش کنید.');
+    }
+}
+function allowFormMethods(): void
+{
+    if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'], true)) {
+        http_response_code(405);
+        header('Allow: GET, POST');
+        exit('این روش درخواست مجاز نیست.');
+    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') requireWriteRequest();
 }

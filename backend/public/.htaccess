@@ -1,3 +1,6 @@
 Options -Indexes
 # این مجوز فقط برای پوشه عمومی است؛ فایل‌های خصوصی بیرون آن باقی می‌مانند.
 Require all granted
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

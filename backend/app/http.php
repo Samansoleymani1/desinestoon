@@ -2,6 +2,8 @@
 declare(strict_types=1);
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/catalog.php';
+require_once __DIR__ . '/content.php';
+ini_set('display_errors', '0');
 
 function respondWithCatalog(string $resource): void
 {
@@ -16,7 +18,11 @@ function respondWithCatalog(string $resource): void
     }
     try {
         $db = database();
-        $data = $resource === 'categories' ? publishedCategories($db) : publishedProjects($db);
+        $data = match ($resource) {
+            'categories' => publishedCategories($db),
+            'projects' => publishedProjects($db),
+            'contact' => contactSettings($db),
+        };
         echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     } catch (Throwable $e) {
         // جزئیات اتصال و رمز هرگز در پاسخ یا گزارش عمومی درج نمی‌شوند.

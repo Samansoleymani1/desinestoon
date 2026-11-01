@@ -58,7 +58,7 @@ try {
         if ($s) { fclose($s); break; } usleep(100000);
     }
     $anonymous = '';
-    foreach (['', 'projects.php', 'categories.php', 'project-form.php', 'contact.php', 'logout.php'] as $path) {
+    foreach (['', 'projects.php', 'categories.php', 'category-form.php', 'project-form.php', 'image.php', 'contact.php', 'logout.php'] as $path) {
         $r = request('/admin/' . $path, $anonymous);
         verify($r['status'] === 303 && str_contains($r['headers'], 'Location: /admin/login.php'), 'صفحه ناشناس محافظت نشده است.');
     }
@@ -80,11 +80,11 @@ try {
     foreach (['projects.php', 'categories.php', 'project-form.php', 'project-form.php?id=1', 'contact.php'] as $path) {
         $r = request('/admin/' . $path, $cookie);
         verify($r['status'] === 200, 'صفحه مدیریت کار نمی‌کند.');
-        if (str_contains($path, 'form') || $path === 'contact.php') verify(str_contains($r['body'], '<fieldset disabled>'), 'فرم ذخیره فعال است.');
+        if (str_contains($path, 'form') || $path === 'contact.php') verify(str_contains($r['body'], 'method="post"') && str_contains($r['body'], 'name="csrf"'), 'فرم نوشتن محافظت نشده است.');
     }
     verify(request('/admin/project-form.php?id=invalid', $cookie)['status'] === 400, 'شناسه نامعتبر پذیرفته شد.');
     verify(request('/admin/project-form.php?id=99999999', $cookie)['status'] === 404, 'رکورد ناموجود تشخیص داده نشد.');
-    verify(request('/admin/projects.php', $cookie, 'POST', ['title' => 'تغییر ناخواسته'])['status'] === 405, 'نوشتن محتوا فعال است.');
+    verify(request('/admin/projects.php', $cookie, 'POST', ['title' => 'تغییر ناخواسته'])['status'] === 403, 'نوشتن بدون CSRF پذیرفته شد.');
     $oldTitle = $db->query('SELECT title FROM projects WHERE id = 1')->fetchColumn();
     $q = $db->prepare('UPDATE projects SET title = ? WHERE id = 1');
     $q->execute(['<script>alert("x")</script>']);
